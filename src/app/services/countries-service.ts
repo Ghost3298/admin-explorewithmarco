@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { neon } from '@netlify/neon';
-
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 export interface Country {
   id: number;
@@ -14,19 +14,16 @@ export interface Country {
   providedIn: 'root',
 })
 export class CountriesService {
-  private sql;
+  private apiUrl = '/.netlify/functions/get-countries';
 
-  constructor() {
-    this.sql = neon();
-  }
+  constructor(private http: HttpClient) {}
 
   async getAllCountries(): Promise<Country[]> {
     try {
-      const [countries] = await this.sql`
-        SELECT * FROM countries 
-        ORDER BY created_at DESC
-      `;
-      return countries as Country[];
+      const response = await firstValueFrom(
+        this.http.get<Country[]>(this.apiUrl)
+      );
+      return response;
     } catch (error) {
       console.error('Error fetching countries:', error);
       throw error;
