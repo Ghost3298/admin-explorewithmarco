@@ -5,6 +5,12 @@
     [tableColumns]="pageConfig.tableColumns"
     [popupTitle]="pageConfig.popupTitle">
     
+    <app-spinner 
+        [show]="isLoading" 
+        message="Loading countries..."
+        [fullScreen]="false">
+    </app-spinner>
+    
     <tbody>
         <!-- Custom table rows for countries -->
         <tr *ngIf="countries.length === 0">

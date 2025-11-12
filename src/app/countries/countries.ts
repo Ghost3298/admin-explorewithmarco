@@ -4,10 +4,12 @@ import { BaseListComponent } from '../shared/base-list/base-list';
 import { ButtonSharedComponent, InputSharedComponent } from '../shared/shared-components/shared-components';
 import { CountriesService, Country } from '../services/countries-service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SpinnerService } from '../services/spinner';
+import { SpinnerComponent } from '../spinner/spinner';
 
 @Component({
   selector: 'app-countries',
-  imports: [CommonModule, BaseListComponent, ButtonSharedComponent, InputSharedComponent, ReactiveFormsModule],
+  imports: [CommonModule, BaseListComponent, ButtonSharedComponent, InputSharedComponent, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './countries.html',
   styleUrl: './countries.css',
 })
@@ -27,8 +29,11 @@ export class Countries implements OnInit {
     country_image: new FormControl('') // Remove required validator for image if it's optional
   });
 
+  isLoading: boolean = false;
+
   constructor(
-    private countriesService: CountriesService
+    private countriesService: CountriesService,
+    private spinnerService: SpinnerService 
   ){}
 
   ngOnInit() {
@@ -36,11 +41,17 @@ export class Countries implements OnInit {
   }
 
   async loadCountries() {
+    this.isLoading = true;
+
     try {
       this.countries = await this.countriesService.getAllCountries();
       console.log('Countries loaded:', this.countries);
     } catch (err) {
       console.error('Error loading countries:', err);
+    } finally {
+      this.isLoading = false;
+      // If using global spinner:
+      // this.spinnerService.hide();
     }
   }
 
