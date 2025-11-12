@@ -21,9 +21,9 @@ import { ButtonSharedComponent, InputSharedComponent } from '../shared-component
                     <th *ngFor="let column of tableColumns">{{ column }}</th>
                 </tr>
             </thead>
-            <tbody>
+
                 <ng-content></ng-content>
-            </tbody>
+
         </table>
     </div>
 
