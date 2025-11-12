@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseListComponent } from '../shared/base-list/base-list';
 import { ButtonSharedComponent, InputSharedComponent } from '../shared/shared-components/shared-components';
@@ -33,7 +33,8 @@ export class Countries implements OnInit {
 
   constructor(
     private countriesService: CountriesService,
-    private spinnerService: SpinnerService 
+    private spinnerService: SpinnerService,
+    private cdr: ChangeDetectorRef
   ){}
 
   ngOnInit() {
@@ -46,12 +47,13 @@ export class Countries implements OnInit {
     try {
       this.countries = await this.countriesService.getAllCountries();
       console.log('Countries loaded:', this.countries);
+
+      this.cdr.detectChanges();
     } catch (err) {
       console.error('Error loading countries:', err);
     } finally {
       this.isLoading = false;
-      // If using global spinner:
-      // this.spinnerService.hide();
+      this.cdr.detectChanges();
     }
   }
 
@@ -87,6 +89,7 @@ export class Countries implements OnInit {
   // Submit the form
   async onSubmit() {
     if (this.countryForm.valid) {
+       this.isLoading = true;
       try {
         const formData = this.countryForm.value;
         
@@ -104,11 +107,14 @@ export class Countries implements OnInit {
         this.selectedFile = null;
         
         console.log('Country added successfully:', newCountry);
-        
+        this.cdr.detectChanges();
         // TODO: Close the popup - you might need to emit an event to BaseListComponent
       } catch (err) {
         console.error('Error adding country:', err);
         alert('Error adding country. Please try again.');
+      } finally{
+         this.isLoading = false;
+          this.cdr.detectChanges();
       }
     } else {
       // Mark all fields as touched to show validation errors
