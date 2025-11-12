@@ -1,0 +1,30 @@
+<app-base-list
+    [pageTitle]="pageConfig.title"
+    [searchPlaceholder]="pageConfig.searchPlaceholder"
+    [buttonText]="pageConfig.buttonText"
+    [tableColumns]="pageConfig.tableColumns"
+    [popupTitle]="pageConfig.popupTitle">
+
+    <tr *ngIf="!posts || posts.length === 0">
+        <td colspan="4" class="empty-state">
+            No posts found. Click "Add Post" to create one.
+        </td>
+    </tr>
+    
+    <tr *ngFor="let post of posts">
+        <td>{{ post.name }}</td>
+        <td>{{ post.description }}</td>
+        <td>{{ post.productsCount }}</td>
+        <td>
+            <span [class]="post.status === 'active' ? 'status-active' : 'status-inactive'">
+                {{ post.status }}
+            </span>
+        </td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn-edit">Edit</button>
+                <button class="btn-delete">Delete</button>
+            </div>
+        </td>
+    </tr>
+</app-base-list>

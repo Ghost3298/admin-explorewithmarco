@@ -1,0 +1,30 @@
+<app-base-list
+    [pageTitle]="pageConfig.title"
+    [searchPlaceholder]="pageConfig.searchPlaceholder"
+    [buttonText]="pageConfig.buttonText"
+    [tableColumns]="pageConfig.tableColumns"
+    [popupTitle]="pageConfig.popupTitle">
+
+    <tr *ngIf="!categories || categories.length === 0">
+        <td colspan="4" class="empty-state">
+            No categories found. Click "Add Category" to create one.
+        </td>
+    </tr>
+    
+    <tr *ngFor="let category of categories">
+        <td>{{ category.name }}</td>
+        <td>{{ category.description }}</td>
+        <td>{{ category.productsCount }}</td>
+        <td>
+            <span [class]="category.status === 'active' ? 'status-active' : 'status-inactive'">
+                {{ category.status }}
+            </span>
+        </td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn-edit">Edit</button>
+                <button class="btn-delete">Delete</button>
+            </div>
+        </td>
+    </tr>
+</app-base-list>

@@ -1,0 +1,30 @@
+<app-base-list
+    [pageTitle]="pageConfig.title"
+    [searchPlaceholder]="pageConfig.searchPlaceholder"
+    [buttonText]="pageConfig.buttonText"
+    [tableColumns]="pageConfig.tableColumns"
+    [popupTitle]="pageConfig.popupTitle">
+
+    <tr *ngIf="!users || users.length === 0">
+        <td colspan="4" class="empty-state">
+            No users found. Click "Add User" to create one.
+        </td>
+    </tr>
+    
+    <tr *ngFor="let u of users">
+        <td>{{ u.name }}</td>
+        <td>{{ u.description }}</td>
+        <td>{{ u.productsCount }}</td>
+        <td>
+            <span [class]="u.status === 'active' ? 'status-active' : 'status-inactive'">
+                {{ u.status }}
+            </span>
+        </td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn-edit">Edit</button>
+                <button class="btn-delete">Delete</button>
+            </div>
+        </td>
+    </tr>
+</app-base-list>

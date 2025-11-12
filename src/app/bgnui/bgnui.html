@@ -1,0 +1,86 @@
+<h2>Background and UI Settings</h2>
+
+<div class="BgnuiContent">
+    <div class="ContentChild">
+        <div class="MaxChild">
+            <h4>Change Background</h4>
+            <form [formGroup]="backgroundForm" (ngSubmit)="saveBackground()">
+                <label>
+                    <input type="radio" formControlName="bgType" value="default"/>
+                    Default
+                </label>
+                <label>
+                    <input type="radio" formControlName="bgType" value="custom"/>
+                    Custom
+                </label>
+                <label>
+                    <input type="radio" formControlName="bgType" value="none"/>
+                    None
+                </label>
+                
+                <!-- Show file upload only when custom is selected -->
+                <div *ngIf="backgroundForm.get('bgType')?.value === 'custom'" class="file-upload">
+                    <input type="file" (change)="onBackgroundUpload($event)" accept="image/*"/>
+                    <small>Recommended: 1920x1080px, max 5MB</small>
+                </div>
+
+                <!-- Color picker for solid colors -->
+                <div *ngIf="backgroundForm.get('bgType')?.value === 'custom'" class="color-picker">
+                    <label>Or choose a solid color:</label>
+                    <input type="color" formControlName="bgColor"/>
+                </div>
+
+                <div class="buttonGroup">
+                    <app-button-shared type="submit" text="Save"/>
+                    <app-button-shared type="button" text="Cancel" variant="danger" (click)="resetBackground()"/>
+                </div>
+            </form>
+        </div>
+        <div class="MaxChild preview-area" [style.background]="getBackgroundPreview()">
+            <span class="preview-text">Live Preview</span>
+        </div>
+    </div>
+
+    <div class="ContentChild">
+        <div class="MaxChild">
+            <h4>Change UI Colors</h4>
+            <form [formGroup]="uiForm" (ngSubmit)="saveUIColors()">
+                <div class="color-settings">
+                    <div class="color-setting">
+                        <label>Primary Color</label>
+                        <input type="color" formControlName="primaryColor"/>
+                    </div>
+                    <div class="color-setting">
+                        <label>Secondary Color</label>
+                        <input type="color" formControlName="secondaryColor"/>
+                    </div>
+                    <div class="color-setting">
+                        <label>Text Color</label>
+                        <input type="color" formControlName="textColor"/>
+                    </div>
+                    <div class="color-setting">
+                        <label>Background Color</label>
+                        <input type="color" formControlName="backgroundColor"/>
+                    </div>
+                </div>
+
+                <!-- Preset themes -->
+                <div class="theme-presets">
+                    <h5>Quick Themes:</h5>
+                    <button type="button" (click)="applyTheme('light')">Light</button>
+                    <button type="button" (click)="applyTheme('dark')">Dark</button>
+                    <button type="button" (click)="applyTheme('blue')">Blue</button>
+                </div>
+
+                <div class="buttonGroup">
+                    <app-button-shared type="submit" text="Save"/>
+                    <app-button-shared type="button" text="Cancel" variant="danger" (click)="resetUI()"/>
+                </div>
+            </form>
+        </div>
+        <div class="MaxChild preview-area" [style]="getUIPreview()">
+            <span class="preview-text" [style.color]="uiForm.get('textColor')?.value">UI Preview</span>
+            <button class="preview-button" [style.background]="uiForm.get('primaryColor')?.value">Button</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="navbar">
+    <ul>
+        <li 
+            *ngFor="let l of links" 
+            [routerLink]="l.link" 
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: false }">
+            {{l.title}}
+        </li>
+    </ul>
+    <ul>
+        <li routerLink="/">Logout</li>
+    </ul>
+</div>

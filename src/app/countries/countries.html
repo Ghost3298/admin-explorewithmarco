@@ -1,0 +1,44 @@
+<app-base-list
+    [pageTitle]="pageConfig.title"
+    [searchPlaceholder]="pageConfig.searchPlaceholder"
+    [buttonText]="pageConfig.buttonText"
+    [tableColumns]="pageConfig.tableColumns"
+    (onAddClick)="addCountry()"
+    [popupTitle]="pageConfig.popupTitle">
+    
+    <!-- Custom table rows for countries -->
+    <tr *ngIf="!countries || countries.length === 0">
+        <td colspan="4" class="empty-state">
+            No countries found. Click "Add Country" to create one.
+        </td>
+    </tr>
+    <tr *ngFor="let country of countries">
+        <td>{{ country.country_name }}</td>
+        <td>
+            <img *ngIf="country.country_image" [src]="country.country_image" [alt]="country.country_name" class="table-image"/>
+            <span *ngIf="!country.country_image" class="no-image">No image</span>
+        </td>
+        <td>
+            <span [class]="country.status ? 'status-active' : 'status-inactive'">
+                {{ country.status }}
+            </span>
+        </td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn-edit">Edit</button>
+                <button class="btn-delete">Delete</button>
+            </div>
+        </td>
+    </tr>
+
+    <div popup-content>
+        <form class="popup-form">
+            <app-input-shared type="text" placeholder="Country name" />
+            <app-input-shared type="file" placeholder="Country image"/>
+            <div class="form-actions">
+                <app-button-shared variant="secondary" text="Cancel" type="reset"/>
+                <app-button-shared variant="success" text="Save Country" type="submit"/>
+            </div>
+        </form>
+    </div>
+</app-base-list>

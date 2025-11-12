@@ -1,0 +1,14 @@
+.MainPage{
+    width: 100svw;
+    height: 100svh;
+    display: flex;
+    overflow-y: hidden;
+}
+
+.content{
+    width: 100%;
+    height: 100%;
+    padding: 25px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}

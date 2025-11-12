@@ -1,0 +1,30 @@
+<app-base-list
+    [pageTitle]="pageConfig.title"
+    [searchPlaceholder]="pageConfig.searchPlaceholder"
+    [buttonText]="pageConfig.buttonText"
+    [tableColumns]="pageConfig.tableColumns"
+    [popupTitle]="pageConfig.popupTitle">
+
+    <tr *ngIf="!packages || packages.length === 0">
+        <td colspan="4" class="empty-state">
+            No packages found. Click "Add Package" to create one.
+        </td>
+    </tr>
+    
+    <tr *ngFor="let package of packages">
+        <td>{{ package.name }}</td>
+        <td>{{ package.description }}</td>
+        <td>{{ package.productsCount }}</td>
+        <td>
+            <span [class]="package.status === 'active' ? 'status-active' : 'status-inactive'">
+                {{ package.status }}
+            </span>
+        </td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn-edit">Edit</button>
+                <button class="btn-delete">Delete</button>
+            </div>
+        </td>
+    </tr>
+</app-base-list>

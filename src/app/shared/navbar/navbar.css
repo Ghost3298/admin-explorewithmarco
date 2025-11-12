@@ -1,0 +1,88 @@
+.navbar{
+    width: 150px;
+    height: 100svh;
+    background: linear-gradient(135deg, #013a63 0%, #025a9c 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0px;
+    box-sizing: border-box;
+    color: white;
+    font-size: 16px;
+    border-right: 1px solid #025a9c;
+}
+
+.navbar ul{
+    padding: 0 0;
+    margin: 0 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.navbar ul:first-child{
+    height: 50svh;
+}
+
+.navbar ul li{
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    width: 100%;
+    text-align: center;
+    padding: 15px 0px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-weight: 500;
+}
+
+.navbar ul:last-child li:last-child{
+    border: none;
+}
+
+.navbar ul li:hover{
+    background-color: rgba(255,255,255,0.1);
+    color: #00bcd4;
+    font-weight: 600;
+}
+
+.navbar ul li.active {
+    background-color: rgba(0, 188, 212, 0.2);
+    color: #00bcd4;
+    font-weight: 600;
+    border-left: 4px solid #00bcd4;
+}
+
+.navbar ul li.active:hover {
+    background-color: rgba(0, 188, 212, 0.3);
+}
+
+.navbar ul li {
+    margin: 2px 0;
+}
+
+.navbar-brand {
+    padding: 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    font-size: 18px;
+}
+
+.navbar ul:last-child li {
+    background-color: rgba(0,0,0,0.2);
+    color: #ccc;
+    font-weight: 500;
+}
+
+.navbar ul:last-child li:hover {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #ff8a80;
+    font-weight: 600;
+}
