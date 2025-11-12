@@ -7,7 +7,7 @@
     [popupTitle]="pageConfig.popupTitle">
     
     <!-- Custom table rows for countries -->
-    <tr *ngIf="!countries || countries.length === 0">
+    <tr *ngIf="!countries">
         <td colspan="4" class="empty-state">
             No countries found. Click "Add Country" to create one.
         </td>
