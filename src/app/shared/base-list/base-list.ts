@@ -18,7 +18,7 @@ import { ButtonSharedComponent, InputSharedComponent } from '../shared-component
         <table>
             <thead>
                 <tr>
-                    <th *ngFor="let column of tableColumns">{{ column }}</th>
+                    <td *ngFor="let column of tableColumns">{{ column }}</td>
                 </tr>
             </thead>
             <tbody>
