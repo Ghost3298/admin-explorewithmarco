@@ -33,6 +33,7 @@ export class Countries implements OnInit {
     
     try {
       this.countries = await this.countriesService.getAllCountries();
+      console.log(this.countries)
     } catch (err) {
       console.error('Error loading countries:', err);
     }
