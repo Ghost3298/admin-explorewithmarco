@@ -30,10 +30,11 @@ export class Countries implements OnInit {
   }
 
   async loadCountries() {
-    
-    try {
+     try {
       this.countries = await this.countriesService.getAllCountries();
-      console.log(this.countries)
+      console.log('Countries loaded:', this.countries);
+      console.log('Array length:', this.countries.length);
+      console.log('Is array?', Array.isArray(this.countries));
     } catch (err) {
       console.error('Error loading countries:', err);
     }
