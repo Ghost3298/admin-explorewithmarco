@@ -3,7 +3,6 @@
     [searchPlaceholder]="pageConfig.searchPlaceholder"
     [buttonText]="pageConfig.buttonText"
     [tableColumns]="pageConfig.tableColumns"
-    (onAddClick)="addCountry()"
     [popupTitle]="pageConfig.popupTitle">
     
     <tbody>
@@ -33,13 +32,46 @@
         </tr>
     </tbody>
 
-    <div popup-content>
-        <form class="popup-form">
-            <app-input-shared type="text" placeholder="Country name" />
-            <app-input-shared type="file" placeholder="Country image"/>
+   <div popup-content>
+        <form class="popup-form" [formGroup]="countryForm" (ngSubmit)="onSubmit()">
+            <!-- Country Name Field -->
+            <div class="form-group">
+                <label for="country_name">Country Name *</label>
+                <app-input-shared 
+                    id="country_name"
+                    type="text" 
+                    placeholder="Enter country name" 
+                    formControlName="country_name"
+                    [class.error]="countryName?.invalid && countryName?.touched" />
+                <div *ngIf="countryName?.invalid && countryName?.touched" class="error-message">
+                    <span *ngIf="countryName?.errors?.['required']">Country name is required</span>
+                </div>
+            </div>
+
+            <!-- Country Image Field -->
+            <div class="form-group">
+                <label for="country_image">Country Image</label>
+                <app-input-shared 
+                    id="country_image"
+                    type="file" 
+                    placeholder="Select country image"
+                    (change)="onFileSelected($event)" />
+                <div *ngIf="selectedFile" class="file-info">
+                    Selected file: {{ selectedFile.name }}
+                </div>
+            </div>
+
             <div class="form-actions">
-                <app-button-shared variant="secondary" text="Cancel" type="reset"/>
-                <app-button-shared variant="success" text="Save Country" type="submit"/>
+                <app-button-shared 
+                    variant="secondary" 
+                    text="Cancel" 
+                    type="button"
+                    (click)="onCancel()" />
+                <app-button-shared 
+                    variant="success" 
+                    text="Save Country" 
+                    type="submit"
+                    [disabled]="countryForm.invalid" />
             </div>
         </form>
     </div>
