@@ -31,8 +31,8 @@
             </td>
             <td>
                 <div class="action-buttons">
-                    <button class="btn-edit" (click)="editCountry(country)">Edit</button>
-                    <button class="btn-delete" (click)="deleteCountry(country)">Delete</button>
+                    <app-button-shared text="Edit" variant="warning" (onClick)="editCountry(country)"/>
+                    <app-button-shared text="Delete" variant="danger" (onClick)="deleteCountry(country)"/>
                 </div>
             </td>
         </tr>
