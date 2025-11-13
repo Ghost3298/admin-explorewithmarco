@@ -12,7 +12,12 @@ export async function handler(event: any) {
   }
 
   try {
-    const store = getStore('country-images');
+    // Get the store for images with site ID and token
+    const store = getStore('country-images', {
+      siteID: 'bfe97a73-8cab-4778-973d-90f591010ef2',
+      token: process.env.NETLIFY_BLOB_READ_WRITE_TOKEN
+    });
+    
     const imageBase64 = await store.get(filename);
     
     if (!imageBase64) {
@@ -25,7 +30,7 @@ export async function handler(event: any) {
     return {
       statusCode: 200,
       headers: {
-        'Content-Type': 'image/jpeg', // Adjust based on actual image type
+        'Content-Type': 'image/jpeg',
         'Cache-Control': 'public, max-age=31536000'
       },
       body: imageBase64,

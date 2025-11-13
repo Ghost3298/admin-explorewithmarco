@@ -43,13 +43,16 @@ export async function handler(event: any) {
       };
     }
 
-    // Get the store for images
-    const store = getStore('country-images');
+    // Get the store for images with site ID and token
+    const store = getStore('country-images', {
+      siteID: 'bfe97a73-8cab-4778-973d-90f591010ef2',
+      token: process.env.NETLIFY_BLOB_READ_WRITE_TOKEN
+    });
     
-    // Store the base64 string directly - no Buffer conversion needed
+    // Store the base64 string directly
     await store.set(filename, image, {
       metadata: {
-        contentType: 'image/jpeg', // Adjust based on your image type
+        contentType: 'image/jpeg',
         uploadedAt: new Date().toISOString()
       }
     });

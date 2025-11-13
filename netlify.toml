@@ -1,6 +1,10 @@
 [build]
   command = "npm run build"
-  publish = "dist/admin-for-xplorewithmarco/browser"
+  publish = "dist/your-project-name"
+
+[functions]
+  # This ensures environment variables are available to functions
+  node_bundler = "esbuild"
 
 [[blobs]]
   id = "country-images"
@@ -10,7 +14,6 @@
   to = "/.netlify/functions/get-image?filename=:splat"
   status = 200
 
-# Required for SPA routing in Angular
 [[redirects]]
   from = "/*"
   to = "/index.html"
