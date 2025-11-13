@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 export interface Country {
@@ -34,7 +34,6 @@ export class CountriesService {
     try {
       console.log('Sending country data:', countryData);
       
-      // For now, let's send as JSON without the file to test
       const jsonData = {
         country_name: countryData.country_name,
         country_image: countryData.country_image ? countryData.country_image.name : ''
@@ -52,12 +51,18 @@ export class CountriesService {
       return response;
     } catch (error) {
       console.error('Error adding country:', error);
-      console.error('Error details:', {
-        status: error.status,
-        statusText: error.statusText,
-        url: error.url,
-        error: error.error
-      });
+      
+      if (error instanceof HttpErrorResponse) {
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          url: error.url,
+          error: error.error
+        });
+      } else {
+        console.error('Unexpected error:', error);
+      }
+      
       throw error;
     }
   }

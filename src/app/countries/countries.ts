@@ -76,7 +76,7 @@ export class Countries implements OnInit {
       const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
       if (!validTypes.includes(file.type)) {
         alert('Please select a valid image file (JPEG, PNG, GIF, or WebP)');
-        event.target.value = ''; // Clear the file input
+        event.target.value = '';
         this.selectedFile = null;
         return;
       }
@@ -102,7 +102,6 @@ export class Countries implements OnInit {
       try {
         const formData = this.countryForm.value;
         
-        // Prepare the data for the service
         const countryData = {
           country_name: formData.country_name || '',
           country_image: this.selectedFile
@@ -111,23 +110,26 @@ export class Countries implements OnInit {
         const newCountry = await this.countriesService.addCountry(countryData);
         this.countries.unshift(newCountry);
         
-        // Reset the form and file input
+        // Reset the form
         this.countryForm.reset();
         this.selectedFile = null;
         
-        // Clear the file input manually
+        // Clear the file input
         const fileInput = document.getElementById('country_image') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';
-        }
+        if (fileInput) fileInput.value = '';
         
         console.log('Country added successfully:', newCountry);
         this.cdr.detectChanges();
         
-        // TODO: Close the popup
       } catch (err) {
         console.error('Error adding country:', err);
-        alert('Error adding country. Please try again.');
+        
+        // Simple error message for now
+        if (err instanceof Error) {
+          alert(`Error: ${err.message}`);
+        } else {
+          alert('Error adding country. Please try again.');
+        }
       } finally {
         this.isLoading = false;
         this.cdr.detectChanges();

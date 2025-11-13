@@ -98,8 +98,7 @@ export async function handler(event: any) {
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify({ 
-        error: 'Database query failed',
-        details: err.message 
+        error: 'Database query failed'
       }) 
     };
   }
