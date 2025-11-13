@@ -1,0 +1,17 @@
+[build]
+  command = "npm run build"
+  publish = "dist/admin-for-xplorewithmarco/browser"
+
+[[blobs]]
+  id = "country-images"
+
+[[redirects]]
+  from = "/api/images/*"
+  to = "/.netlify/functions/get-image?filename=:splat"
+  status = 200
+
+# Required for SPA routing in Angular
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

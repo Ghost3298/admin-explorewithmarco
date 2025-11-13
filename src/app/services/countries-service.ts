@@ -34,9 +34,16 @@ export class CountriesService {
     try {
       console.log('Sending country data:', countryData);
       
+      let imageUrl = '';
+      
+      // If there's a file, upload it first
+      if (countryData.country_image) {
+        imageUrl = await this.uploadImage(countryData.country_image);
+      }
+
       const jsonData = {
         country_name: countryData.country_name,
-        country_image: countryData.country_image ? countryData.country_image.name : ''
+        country_image: imageUrl
       };
 
       console.log('JSON data being sent:', jsonData);
@@ -65,5 +72,53 @@ export class CountriesService {
       
       throw error;
     }
+  }
+
+  private async uploadImage(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = async (e: any) => {
+        try {
+          // Convert file to base64
+          const base64Image = e.target.result.split(',')[1];
+          
+          const uploadData = {
+            image: base64Image,
+            filename: this.generateUniqueFilename(file.name)
+          };
+
+          const response = await firstValueFrom(
+            this.http.post<{success: boolean; imageUrl: string; filename: string}>(
+              `${this.baseUrl}/upload-image`,
+              uploadData,
+              {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              }
+            )
+          );
+
+          if (response.success) {
+            resolve(response.imageUrl);
+          } else {
+            reject(new Error('Failed to upload image'));
+          }
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  private generateUniqueFilename(originalName: string): string {
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 15);
+    const extension = originalName.split('.').pop();
+    return `country-${timestamp}-${randomString}.${extension}`;
   }
 }

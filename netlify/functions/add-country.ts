@@ -1,4 +1,4 @@
-// netlify/functions/add-country.ts - Fixed version
+// netlify/functions/add-country.ts - Updated version
 import { neon } from '@neondatabase/serverless';
 
 export async function handler(event: any) {
@@ -83,8 +83,8 @@ export async function handler(event: any) {
     
     // Insert the new country
     const countries = await sql`
-      INSERT INTO countries (country_name, country_image, status, created_at) 
-      VALUES (${country_name.trim()}, ${country_image || ''}, true, NOW())
+      INSERT INTO countries (country_name, country_image) 
+      VALUES (${country_name.trim()}, ${country_image || ''})
       RETURNING id, country_name, country_image, status, created_at
     `;
     
