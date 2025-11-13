@@ -56,12 +56,12 @@
 
             <!-- Country Image Field -->
             <div class="form-group">
-                <label for="country_image">Country Image</label>
-                <app-input-shared 
+                <label for="country_image">Country Image *</label>
+                <input 
                     id="country_image"
                     type="file" 
-                    placeholder="Select country image"
-                    (change)="onFileSelected($event)" />
+                    (change)="onFileSelected($event)"
+                    class="form-control" />
                 <div *ngIf="selectedFile" class="file-info">
                     Selected file: {{ selectedFile.name }}
                 </div>

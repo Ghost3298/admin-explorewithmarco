@@ -26,7 +26,6 @@ export class Countries implements OnInit {
   
   public countryForm = new FormGroup({
     country_name: new FormControl('', [Validators.required]),
-    country_image: new FormControl('')
   });
 
   isLoading: boolean = false;
@@ -73,10 +72,26 @@ export class Countries implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        alert('Please select a valid image file (JPEG, PNG, GIF, or WebP)');
+        event.target.value = ''; // Clear the file input
+        this.selectedFile = null;
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
+        event.target.value = '';
+        this.selectedFile = null;
+        return;
+      }
+      
       this.selectedFile = file;
-      this.countryForm.patchValue({
-        country_image: file.name
-      });
+    } else {
+      this.selectedFile = null;
     }
   }
 
@@ -87,21 +102,29 @@ export class Countries implements OnInit {
       try {
         const formData = this.countryForm.value;
         
-        // Prepare the data for the service - now passing the File object
+        // Prepare the data for the service
         const countryData = {
           country_name: formData.country_name || '',
-          country_image: this.selectedFile // Pass the actual File object
+          country_image: this.selectedFile
         };
 
         const newCountry = await this.countriesService.addCountry(countryData);
         this.countries.unshift(newCountry);
         
-        // Reset the form
+        // Reset the form and file input
         this.countryForm.reset();
         this.selectedFile = null;
         
+        // Clear the file input manually
+        const fileInput = document.getElementById('country_image') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+        
         console.log('Country added successfully:', newCountry);
         this.cdr.detectChanges();
+        
+        // TODO: Close the popup
       } catch (err) {
         console.error('Error adding country:', err);
         alert('Error adding country. Please try again.');
@@ -135,6 +158,11 @@ export class Countries implements OnInit {
   onCancel() {
     this.countryForm.reset();
     this.selectedFile = null;
-    // TODO: Close the popup
+    
+    // Clear the file input manually
+    const fileInput = document.getElementById('country_image') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 }
