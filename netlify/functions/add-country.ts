@@ -1,4 +1,4 @@
-// netlify/functions/add-country.ts - Updated version
+// netlify/functions/add-country.ts
 import { neon } from '@neondatabase/serverless';
 
 export async function handler(event: any) {
@@ -32,7 +32,8 @@ export async function handler(event: any) {
   let body;
   try {
     body = JSON.parse(event.body);
-    console.log('Parsed request body:', JSON.stringify(body, null, 2));
+    console.log('Parsed request body - country_name length:', body.country_name?.length);
+    console.log('Image data length:', body.country_image?.length || 0);
   } catch (error) {
     console.error('Error parsing JSON:', error);
     return {
@@ -57,8 +58,7 @@ export async function handler(event: any) {
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify({ 
-        error: 'Country name is required',
-        receivedData: body 
+        error: 'Country name is required'
       }),
     };
   }
@@ -76,19 +76,15 @@ export async function handler(event: any) {
     const sql = neon(databaseUrl);
     
     console.log('Executing database query...');
-    console.log('Inserting country:', { 
-      name: country_name, 
-      image: country_image || '' 
-    });
     
-    // Insert the new country
+    // Insert the new country with base64 image
     const countries = await sql`
-      INSERT INTO countries (country_name, country_image) 
-      VALUES (${country_name.trim()}, ${country_image || ''})
+      INSERT INTO countries (country_name, country_image, status, created_at) 
+      VALUES (${country_name.trim()}, ${country_image || ''}, true, NOW())
       RETURNING id, country_name, country_image, status, created_at
     `;
     
-    console.log('Database query successful, result:', JSON.stringify(countries[0], null, 2));
+    console.log('Database query successful, country added with ID:', countries[0].id);
     
     return {
       statusCode: 201,
