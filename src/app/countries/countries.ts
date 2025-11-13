@@ -26,7 +26,7 @@ export class Countries implements OnInit {
   
   public countryForm = new FormGroup({
     country_name: new FormControl('', [Validators.required]),
-    country_image: new FormControl('') // Remove required validator for image if it's optional
+    country_image: new FormControl('')
   });
 
   isLoading: boolean = false;
@@ -63,16 +63,10 @@ export class Countries implements OnInit {
   }
 
   deleteCountry(country: Country) {
-    if (confirm(`Are you sure you want to delete ${country.country_name}?`)) {
+    if (confirm(`Are you sure you want to set ${country.country_name} as inactive?`)) {
       console.log('Delete country:', country);
       // TODO: Implement delete functionality
     }
-  }
-
-  // This method handles the button click to open the popup
-  onAddButtonClick() {
-    console.log('Add new country button clicked');
-    // The popup will open automatically via BaseListComponent
   }
 
   // Handle file selection
@@ -89,18 +83,18 @@ export class Countries implements OnInit {
   // Submit the form
   async onSubmit() {
     if (this.countryForm.valid) {
-       this.isLoading = true;
+      this.isLoading = true;
       try {
         const formData = this.countryForm.value;
         
-        // Prepare the data for the service
+        // Prepare the data for the service - now passing the File object
         const countryData = {
           country_name: formData.country_name || '',
-          country_image: formData.country_image || ''
+          country_image: this.selectedFile // Pass the actual File object
         };
 
         const newCountry = await this.countriesService.addCountry(countryData);
-        this.countries.unshift(newCountry); // Add to the beginning of the list
+        this.countries.unshift(newCountry);
         
         // Reset the form
         this.countryForm.reset();
@@ -108,16 +102,14 @@ export class Countries implements OnInit {
         
         console.log('Country added successfully:', newCountry);
         this.cdr.detectChanges();
-        // TODO: Close the popup - you might need to emit an event to BaseListComponent
       } catch (err) {
         console.error('Error adding country:', err);
         alert('Error adding country. Please try again.');
-      } finally{
-         this.isLoading = false;
-          this.cdr.detectChanges();
+      } finally {
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     } else {
-      // Mark all fields as touched to show validation errors
       this.markFormGroupTouched();
     }
   }
