@@ -10,10 +10,10 @@ import { RouterModule } from '@angular/router';
 })
 export class Navbar {
   public links = [
-    {
-      "title": "Bg & UI",
-      "link" : "bgnui"
-    },
+    // {
+    //   "title": "Bg & UI",
+    //   "link" : "bgnui"
+    // },
     {
       "title": "Countries",
       "link" : "countries"

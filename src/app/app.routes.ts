@@ -14,9 +14,9 @@ export const routes: Routes = [
     },
     {
         path:'home', component: MainPage, children:[
-            {
-                path: "bgnui", component: Bgnui
-            },
+            // {
+            //     path: "bgnui", component: Bgnui
+            // },
             {
                 path: "countries", component: Countries
             },
@@ -31,7 +31,13 @@ export const routes: Routes = [
             },
             {
                 path: "users", component: Users
+            },
+            {
+                path: "**" , component: Countries
             }
         ]
+    },
+    {
+        path: '**', component: Login
     }
 ];
