@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 export interface Country {
   id: number;
   country_name: string;
-  country_image: string; // This will be base64 string
+  country_image: string;
   status: boolean;
   created_at: string;
 }
