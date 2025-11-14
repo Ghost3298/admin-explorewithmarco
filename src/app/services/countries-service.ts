@@ -81,4 +81,44 @@ export class CountriesService {
       reader.readAsDataURL(file);
     });
   }
+  
+  async updateCountry(countryData: {
+    id: number;
+    country_name?: string;
+    country_image?: File | null;
+    status?: boolean;
+  }): Promise<Country> {
+    try {
+      console.log('Updating country data:', countryData);
+      
+      let imageBase64: string | undefined;
+      
+      // If there's a new file, convert it to base64
+      if (countryData.country_image) {
+        imageBase64 = await this.fileToBase64(countryData.country_image);
+        console.log('New image converted to base64, length:', imageBase64.length);
+      }
+
+      const requestBody = {
+        id: countryData.id,
+        name: countryData.country_name,
+        image: imageBase64,
+        status: countryData.status
+      };
+
+      console.log('Sending update request:', requestBody);
+      
+      const response = await firstValueFrom(
+        this.http.put<Country>(`${this.baseUrl}/update-country`, requestBody, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      );
+      return response;
+    } catch (error) {
+      console.error('Error updating country:', error);
+      throw error;
+    }
+  }
 }

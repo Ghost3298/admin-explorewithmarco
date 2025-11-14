@@ -32,7 +32,7 @@
             <td>
                 <div class="action-buttons">
                     <app-button-shared text="Edit" variant="warning" (onClick)="editCountry(country)" size="sm"/>
-                    <app-button-shared text="Set Inactive" variant="danger" (onClick)="deleteCountry(country)" size="sm"/>
+                    <app-button-shared [text]="country.status ? 'Set Inactive' : 'Set Active'" [variant]="country.status ? 'danger' : 'success'" (onClick)="updateCountryStatus(country)" size="sm"/>
                 </div>
             </td>
         </tr>
@@ -56,7 +56,7 @@
 
             <!-- Country Image Field -->
             <div class="form-group">
-                <label for="country_image">Country Image *</label>
+                <label for="country_image">Country Image</label>
                 <input 
                     id="country_image"
                     type="file" 
@@ -82,3 +82,74 @@
         </form>
     </div>
 </app-base-list>
+
+<!-- Edit Country Popup -->
+<div class="modal-overlay" *ngIf="showEditPopup" (click)="closeEditPopup()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Edit Country</h3>
+            <button class="close-btn" (click)="closeEditPopup()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form class="popup-form" [formGroup]="editCountryForm" (ngSubmit)="onEditSubmit()">
+                <!-- Country Name Field -->
+                <div class="form-group">
+                    <label for="edit_country_name">Country Name *</label>
+                    <app-input-shared 
+                        id="edit_country_name"
+                        type="text" 
+                        placeholder="Enter country name" 
+                        formControlName="country_name"
+                        [class.error]="editCountryName?.invalid && editCountryName?.touched" />
+                    <div *ngIf="editCountryName?.invalid && editCountryName?.touched" class="error-message">
+                        <span *ngIf="editCountryName?.errors?.['required']">Country name is required</span>
+                    </div>
+                </div>
+
+                <!-- Country Image Field -->
+                <div class="form-group">
+                    <label for="edit_country_image">Country Image</label>
+                    <input 
+                        id="edit_country_image"
+                        type="file" 
+                        (change)="onEditFileSelected($event)"
+                        class="form-control" />
+                    <div *ngIf="selectedEditFile" class="file-info">
+                        Selected file: {{ selectedEditFile.name }}
+                    </div>
+                    <div *ngIf="editingCountry?.country_image && !selectedEditFile" class="file-info">
+                        Current image will be kept
+                    </div>
+                </div>
+
+                <!-- Status Field -->
+                <div class="form-group">
+                    <label for="edit_country_status">Status</label>
+                    <div class="checkbox-group">
+                        <input 
+                            id="edit_country_status"
+                            type="checkbox" 
+                            formControlName="status"
+                            class="checkbox-input" />
+                        <label for="edit_country_status" class="checkbox-label">
+                            Active
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <app-button-shared 
+                        variant="secondary" 
+                        text="Cancel" 
+                        type="button"
+                        (click)="onEditCancel()" />
+                    <app-button-shared 
+                        variant="warning" 
+                        text="Update Country" 
+                        type="submit"
+                        [disabled]="editCountryForm.invalid" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
