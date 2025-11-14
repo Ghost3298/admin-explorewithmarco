@@ -12,11 +12,11 @@
     </tr>
     
     <tr *ngFor="let u of users">
-        <td>{{ u.name }}</td>
-        <td>{{ u.description }}</td>
-        <td>{{ u.productsCount }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.first_name }}</td>
+        <td>{{ u.last_name }}</td>
         <td>
-            <span [class]="u.status === 'active' ? 'status-active' : 'status-inactive'">
+            <span [class]="u.status ? 'status-active' : 'status-inactive'">
                 {{ u.status }}
             </span>
         </td>
