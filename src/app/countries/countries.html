@@ -3,7 +3,8 @@
     [searchPlaceholder]="pageConfig.searchPlaceholder"
     [buttonText]="pageConfig.buttonText"
     [tableColumns]="pageConfig.tableColumns"
-    [popupTitle]="pageConfig.popupTitle">
+    [popupTitle]="pageConfig.popupTitle"
+    (searchChanged)="onSearchChange($event)">
     
     <app-spinner 
         [show]="isLoading" 
@@ -13,12 +14,17 @@
     
     <tbody>
         <!-- Custom table rows for countries -->
-        <tr *ngIf="countries.length === 0">
+        <tr *ngIf="filteredCountries.length === 0">
             <td colspan="4" class="empty-state">
-                No countries found. Click "Add Country" to create one.
+                <span *ngIf="searchTerm && countries.length > 0">
+                    No countries found matching "{{ searchTerm }}"
+                </span>
+                <span *ngIf="!searchTerm && countries.length === 0">
+                    No countries found. Click "Add Country" to create one.
+                </span>
             </td>
         </tr>
-        <tr *ngFor="let country of countries">
+        <tr *ngFor="let country of filteredCountries">
             <td>{{ country.country_name }}</td>
             <td>
                 <img *ngIf="country.country_image" [src]="country.country_image" [alt]="country.country_name" class="table-image"/>

@@ -22,10 +22,12 @@ export class Countries implements OnInit {
     popupTitle: "Add New Country"
   };
   countries: Country[] = [];
+  filteredCountries: Country[] = [];
   selectedFile: File | null = null;
   selectedEditFile: File | null = null;
   isEditMode: boolean = false;
   editingCountry: Country | null = null;
+  searchTerm: string = '';
   
   // Add Country Form
   public countryForm = new FormGroup({
@@ -56,6 +58,7 @@ export class Countries implements OnInit {
 
     try {
       this.countries = await this.countriesService.getAllCountries();
+      this.filteredCountries = [...this.countries]; // Initialize filtered list
       console.log('Countries loaded:', this.countries);
 
       this.cdr.detectChanges();
@@ -65,6 +68,23 @@ export class Countries implements OnInit {
       this.isLoading = false;
       this.cdr.detectChanges();
     }
+  }
+
+  // Search functionality
+  onSearchChange(searchTerm: string) {
+    this.searchTerm = searchTerm.toLowerCase().trim();
+    this.filterCountries();
+  }
+
+  filterCountries() {
+    if (!this.searchTerm) {
+      this.filteredCountries = [...this.countries];
+    } else {
+      this.filteredCountries = this.countries.filter(country =>
+        country.country_name.toLowerCase().includes(this.searchTerm)
+      );
+    }
+    this.cdr.detectChanges();
   }
 
   editCountry(country: Country) {
@@ -99,6 +119,12 @@ export class Countries implements OnInit {
         const index = this.countries.findIndex(c => c.id === country.id);
         if (index !== -1) {
           this.countries[index] = updatedCountry;
+        }
+        
+        // Also update in filtered array if it exists there
+        const filteredIndex = this.filteredCountries.findIndex(c => c.id === country.id);
+        if (filteredIndex !== -1) {
+          this.filteredCountries[filteredIndex] = updatedCountry;
         }
         
         console.log(`Country status updated to ${action}:`, updatedCountry);
@@ -182,6 +208,7 @@ export class Countries implements OnInit {
 
         const newCountry = await this.countriesService.addCountry(countryData);
         this.countries.unshift(newCountry);
+        this.filteredCountries.unshift(newCountry); // Also add to filtered list
         
         // Reset the form
         this.countryForm.reset();
@@ -228,10 +255,15 @@ export class Countries implements OnInit {
 
         const updatedCountry = await this.countriesService.updateCountry(updateData);
         
-        // Update the country in the local array
+        // Update the country in both arrays
         const index = this.countries.findIndex(c => c.id === this.editingCountry!.id);
         if (index !== -1) {
           this.countries[index] = updatedCountry;
+        }
+        
+        const filteredIndex = this.filteredCountries.findIndex(c => c.id === this.editingCountry!.id);
+        if (filteredIndex !== -1) {
+          this.filteredCountries[filteredIndex] = updatedCountry;
         }
         
         // Close the edit popup and reset

@@ -1,17 +1,22 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonSharedComponent, InputSharedComponent } from '../shared-components/shared-components';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-base-list',
   standalone: true,
-  imports: [CommonModule, InputSharedComponent, ButtonSharedComponent],
+  imports: [CommonModule, InputSharedComponent, ButtonSharedComponent, FormsModule],
   template: `
     <h2>{{ pageTitle }}</h2>
 
     <div class="content">
         <div class="searchBar">
-            <app-input-shared [placeholder]="searchPlaceholder" type="text"/>
+            <app-input-shared 
+                [placeholder]="searchPlaceholder" 
+                type="text"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="onSearchChange()" />
             <app-button-shared variant="success" [text]="buttonText" (click)="onAddClick()"/>
         </div>
 
@@ -22,7 +27,7 @@ import { ButtonSharedComponent, InputSharedComponent } from '../shared-component
                 </tr>
             </thead>
 
-                <ng-content></ng-content>
+            <ng-content></ng-content>
 
         </table>
     </div>
@@ -49,7 +54,9 @@ export class BaseListComponent {
   @Input() tableColumns: string[] = [];
   @Input() popupTitle: string = 'Add New Item';
   @Output() addClicked = new EventEmitter<void>();
+  @Output() searchChanged = new EventEmitter<string>();
 
+  searchTerm: string = '';
   showPopup: boolean = false;
 
   onAddClick() {
@@ -59,5 +66,9 @@ export class BaseListComponent {
 
   closePopup() {
     this.showPopup = false;
+  }
+
+  onSearchChange() {
+    this.searchChanged.emit(this.searchTerm);
   }
 }
