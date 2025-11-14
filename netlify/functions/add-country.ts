@@ -1,8 +1,8 @@
-// netlify/functions/add-country.ts
-import { neon } from '@neondatabase/serverless';
+// test-add-country.ts - Fixed version
+import { neon } from '@netlify/neon';
 
 export async function handler(event: any) {
-  console.log('=== ADD COUNTRY FUNCTION START ===');
+  console.log('=== test-add-country function ===');
   
   // Handle CORS
   if (event.httpMethod === 'OPTIONS') {
@@ -32,8 +32,7 @@ export async function handler(event: any) {
   let body;
   try {
     body = JSON.parse(event.body);
-    console.log('Parsed request body - country_name length:', body.country_name?.length);
-    console.log('Image data length:', body.country_image?.length || 0);
+    console.log('Parsed request body:', body);
   } catch (error) {
     console.error('Error parsing JSON:', error);
     return {
@@ -46,71 +45,49 @@ export async function handler(event: any) {
     };
   }
 
-  const { country_name, country_image } = body;
+  const { name, image } = body;
 
-  // Validate required fields
-  if (!country_name || country_name.trim() === '') {
-    console.error('Validation failed: Country name is required');
+  if (!name || !image) {
+    console.log("error: no name or image");
     return {
       statusCode: 400,
       headers: { 
         'Access-Control-Allow-Origin': '*', 
         'Content-Type': 'application/json' 
       },
-      body: JSON.stringify({ 
-        error: 'Country name is required'
-      }),
+      body: JSON.stringify({ error: 'Name and image are required' })
     };
   }
 
   try {
-    console.log('Connecting to database...');
+    const sql = neon(process.env.DATABASE_URL!);
     
-    // Get database URL from environment variable
-    const databaseUrl = process.env.DATABASE_URL;
-    if (!databaseUrl) {
-      throw new Error('DATABASE_URL environment variable is not set');
-    }
-    
-    console.log('Database URL found, establishing connection...');
-    const sql = neon(databaseUrl);
-    
-    console.log('Executing database query...');
-    
-    // Insert the new country with base64 image
-    const countries = await sql`
+    // Insert the country and return the inserted record
+    const countryToAdd = await sql`
       INSERT INTO countries (country_name, country_image, status, created_at) 
-      VALUES (${country_name.trim()}, ${country_image || ''}, true, NOW())
+      VALUES (${name}, ${image}, true, NOW())
       RETURNING id, country_name, country_image, status, created_at
     `;
     
-    console.log('Database query successful, country added with ID:', countries[0].id);
+    console.log('Country added successfully:', countryToAdd[0].id);
     
     return {
-      statusCode: 201,
+      statusCode: 200,
       headers: { 
         'Access-Control-Allow-Origin': '*', 
         'Content-Type': 'application/json' 
       },
-      body: JSON.stringify(countries[0]),
+      body: JSON.stringify(countryToAdd[0])
     };
-  } catch (err: any) {
-    console.error('=== DATABASE ERROR ===');
-    console.error('Error message:', err.message);
-    console.error('Error stack:', err.stack);
-    console.error('=== END DATABASE ERROR ===');
-    
-    return { 
-      statusCode: 500,
+  } catch (err) {
+    console.log('Database error:', err);
+    return {
+      statusCode: 500, 
       headers: { 
         'Access-Control-Allow-Origin': '*', 
         'Content-Type': 'application/json' 
       },
-      body: JSON.stringify({ 
-        error: 'Database operation failed',
-        details: err.message,
-        type: 'database_error'
-      }) 
+      body: JSON.stringify({ error: 'Database query failed' })
     };
   }
 }

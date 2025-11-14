@@ -50,7 +50,7 @@ export class CountriesService {
 
       console.log('Sending data to add-country function');
       const response = await firstValueFrom(
-        this.http.post<Country>(`${this.baseUrl}/test-add-country`,{
+        this.http.post<Country>(`${this.baseUrl}/add-country`,{
           name: countryData.country_name,
           image: imageBase64
         }, {
