@@ -23,7 +23,7 @@
             <td>{{ u.first_name }}</td>
             <td>{{ u.last_name }}</td>
             <td>{{ u.role }}</td>
-            <td>{{ u.created_at }}</td>
+            <td>{{ u.created_at | date}}</td>
             <td>
                 <span [class]="u.status ? 'status-active' : 'status-inactive'">
                     {{ u.status }}
