@@ -5,26 +5,41 @@
     [tableColumns]="pageConfig.tableColumns"
     [popupTitle]="pageConfig.popupTitle">
 
-    <tr *ngIf="!users || users.length === 0">
-        <td colspan="4" class="empty-state">
-            No users found. Click "Add User" to create one.
-        </td>
-    </tr>
-    
-    <tr *ngFor="let u of users">
-        <td>{{ u.username }}</td>
-        <td>{{ u.first_name }}</td>
-        <td>{{ u.last_name }}</td>
-        <td>
-            <span [class]="u.status ? 'status-active' : 'status-inactive'">
-                {{ u.status }}
-            </span>
-        </td>
-        <td>
-            <div class="action-buttons">
-                <button class="btn-edit">Edit</button>
-                <button class="btn-delete">Delete</button>
-            </div>
-        </td>
-    </tr>
+    <app-spinner
+        [show]="isLoading"
+        message="Loading users..."
+        [fullScreen]="false">
+    </app-spinner>
+
+    <tbody>
+        <tr *ngIf="!users || users.length === 0">
+            <td colspan="4" class="empty-state">
+                No users found. Click "Add User" to create one.
+            </td>
+        </tr>
+        
+        <tr *ngFor="let u of users">
+            <td>{{ u.username }}</td>
+            <td>{{ u.first_name }}</td>
+            <td>{{ u.last_name }}</td>
+            <td>{{ u.role }}</td>
+            <td>{{ u.created_at }}</td>
+            <td>
+                <span [class]="u.status ? 'status-active' : 'status-inactive'">
+                    {{ u.status }}
+                </span>
+            </td>
+            <td>
+                <span [class]="u.show_on_website ? 'status-active' : 'status-inactive'">
+                    {{ u.show_on_website }}
+                </span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
 </app-base-list>

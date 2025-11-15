@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseListComponent } from '../shared/base-list/base-list';
 import { User, UsersService } from '../services/users-service';
+import { SpinnerComponent } from "../spinner/spinner";
 
 @Component({
   selector: 'app-users',
-  imports: [BaseListComponent, CommonModule],
+  imports: [BaseListComponent, CommonModule, SpinnerComponent],
   templateUrl: './users.html',
 })
 export class Users implements OnInit{
@@ -13,7 +14,7 @@ export class Users implements OnInit{
     title: 'Users',
     searchPlaceholder: 'Search users by name or email...',
     buttonText: 'Add User',
-    tableColumns: ['username', 'first name', 'last name', 'Role', 'Join Date', 'Status', 'Actions'],
+    tableColumns: ['username', 'first name', 'last name', 'Role', 'Join Date', 'Status', 'Seen on Webiste', 'Actions'],
     popupTitle: "Add New User"
   };
 
