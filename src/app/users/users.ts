@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { BaseListComponent } from '../shared/base-list/base-list';
 import { User, UsersService } from '../services/users-service';
 import { SpinnerComponent } from "../spinner/spinner";
+import { ButtonSharedComponent } from "../shared/shared-components/shared-components";
 
 @Component({
   selector: 'app-users',
-  imports: [BaseListComponent, CommonModule, SpinnerComponent],
+  imports: [BaseListComponent, CommonModule, SpinnerComponent, ButtonSharedComponent],
   templateUrl: './users.html',
 })
 export class Users implements OnInit{
